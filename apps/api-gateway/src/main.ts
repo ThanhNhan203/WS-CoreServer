@@ -5,17 +5,30 @@ import { Logger } from '@nestjs/common';
 declare const module: any;
 
 async function bootstrap() {
-   const app = await NestFactory.create(ApiGatewayModule);
-   const configService = app.get(ConfigService);
-   const port = configService.get<number>('app.port') || 3000;
-   const host = configService.get<string>('app.host');
+   const APP = await NestFactory.create(ApiGatewayModule);
+   const configService = APP.get(ConfigService);
+   const PORT = configService.get<number>('app.port') || 3000;
+   const HOST = configService.get<string>('app.host');
+   const clientCORS = configService.get<string>('app.host');
 
-   await app.listen(port);
-   Logger.log(`🚀 API-Gateway is running on port http://${host}:${port} 🚀`);
+   APP.enableCors({
+      origin: (origin: string, callback: any) => {
+         if (!origin || origin.startsWith(`${clientCORS}`)) {
+            callback(null, true);
+         } else {
+            callback(new Error('Not allowed by CORS'));
+         }
+      },
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true,
+   });
+
+   await APP.listen(PORT);
+   Logger.log(`🚀 API-Gateway is running on port http://${HOST}:${PORT} 🚀`);
 
    if (module.hot) {
       module.hot.accept();
-      module.hot.dispose(() => app.close());
+      module.hot.dispose(() => APP.close());
    }
 }
 bootstrap();
