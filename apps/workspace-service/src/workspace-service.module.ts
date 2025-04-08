@@ -4,7 +4,8 @@ import { WorkspaceServiceController } from './workspace-service.controller';
 import { WorkspaceServiceService } from './workspace-service.service';
 import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
+import { getKafkaConfig } from '@libs/common';
 
 @Module({
    imports: [
@@ -20,41 +21,10 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             abortEarly: false,
          },
       }),
-      ClientsModule.register([
+      ClientsModule.registerAsync([
          {
             name: 'WORKSPACE_SERVICE',
-            transport: Transport.KAFKA,
-            options: {
-               client: {
-                  clientId: 'workspace-service-server',
-                  brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
-                  retry: {
-                     initialRetryTime: 100,
-                     retries: 8
-                  }
-               },
-               consumer: {
-                  groupId: 'workspace-group',
-                  allowAutoTopicCreation: true,
-                  retry: {
-                     initialRetryTime: 100,
-                     retries: 8
-                  }
-               },
-               producer: {
-                  allowAutoTopicCreation: true,
-                  retry: {
-                     initialRetryTime: 100,
-                     retries: 8
-                  }
-               },
-               subscribe: {
-                  fromBeginning: true,
-               },
-               run: {
-                  autoCommit: true,
-               },
-            },
+            useFactory: () => getKafkaConfig('workspace-service-server'),
          },
       ]),
    ],

@@ -4,7 +4,8 @@ import { ApiGatewayService } from './api-gateway.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
+import { getKafkaConfig } from '@libs/common';
 
 @Module({
    imports: [
@@ -20,41 +21,10 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             abortEarly: false,
          },
       }),
-      ClientsModule.register([
+      ClientsModule.registerAsync([
          {
             name: 'AUTH_SERVICE',
-            transport: Transport.KAFKA,
-            options: {
-               client: {
-                  clientId: 'api-gateway-client',
-                  brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
-                  retry: {
-                     initialRetryTime: 100,
-                     retries: 8
-                  }
-               },
-               consumer: {
-                  groupId: 'api-gateway-group',
-                  allowAutoTopicCreation: true,
-                  retry: {
-                     initialRetryTime: 100,
-                     retries: 8
-                  }
-               },
-               producer: {
-                  allowAutoTopicCreation: true,
-                  retry: {
-                     initialRetryTime: 100,
-                     retries: 8
-                  }
-               },
-               subscribe: {
-                  fromBeginning: true,
-               },
-               run: {
-                  autoCommit: true,
-               },
-            },
+            useFactory: () => getKafkaConfig('api-gateway-client'),
          },
       ]),
    ],

@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './api-gateway.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
+import { getKafkaConfig } from '@libs/common';
+
 declare const module: any;
 
 async function bootstrap() {
@@ -10,6 +12,11 @@ async function bootstrap() {
    const PORT = configService.get<number>('app.port') || 3000;
    const HOST = configService.get<string>('app.host');
    const clientCORS = configService.get<string>('app.host');
+
+   // Cấu hình Kafka cho API Gateway
+   const kafkaConfig = getKafkaConfig('api-gateway-consumer');
+   APP.connectMicroservice(kafkaConfig);
+   await APP.startAllMicroservices();
 
    APP.enableCors({
       origin: (origin: string, callback: any) => {
@@ -25,6 +32,7 @@ async function bootstrap() {
 
    await APP.listen(PORT);
    Logger.log(`🚀 API-Gateway is running on port http://${HOST}:${PORT} 🚀`);
+   Logger.log(`🚀 Kafka microservice is connected 🚀`);
 
    if (module.hot) {
       module.hot.accept();

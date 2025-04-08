@@ -2,36 +2,21 @@ import { NestFactory } from '@nestjs/core';
 import { TaskManagerServiceModule } from './task-manager-service.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { getKafkaConfig } from '@libs/common';
+
 declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(TaskManagerServiceModule);
   const configService = app.get(ConfigService);
 
-  const kafkaBroker =
-    configService.get<string>('kafka.broker') || 'localhost:9092';
-  const kafkaClientId =
-    configService.get<string>('kafka.clientId') || 'task-manager-service';
-  const kafkaGroupId =
-    configService.get<string>('kafka.groupId') || 'task-manager-group';
-
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        clientId: kafkaClientId,
-        brokers: [kafkaBroker],
-      },
-      consumer: {
-        groupId: kafkaGroupId,
-      },
-    },
-  });
-
+  // Sử dụng cấu hình Kafka từ thư viện common
+  const kafkaConfig = getKafkaConfig('task-manager-service');
+  app.connectMicroservice(kafkaConfig);
   await app.startAllMicroservices();
 
   Logger.log(`🚀 Task Manager Service is running 🚀`);
+  Logger.log(`🚀 Kafka microservice is connected 🚀`);
 
   if (module.hot) {
     module.hot.accept();
