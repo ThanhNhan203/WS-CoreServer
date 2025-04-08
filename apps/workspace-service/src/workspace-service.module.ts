@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WorkspaceServiceController } from './workspace-service.controller';
 import { WorkspaceServiceService } from './workspace-service.service';
-import configuration from './config/configuration';
-import { validationSchema } from './config/validation.schema';
+import { configuration, validationSchema } from '@app/common';
 import { ClientsModule } from '@nestjs/microservices';
-import { getKafkaConfig } from '@libs/common';
+import { getKafkaConfig } from '@app/common';
 
 @Module({
    imports: [

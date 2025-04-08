@@ -4,7 +4,7 @@ export const getKafkaConfig = (groupId: string): KafkaOptions => ({
   transport: Transport.KAFKA,
   options: {
     client: {
-      clientId: 'core-server',
+      clientId: 'ws-core-server',
       brokers: ['localhost:9092'],
     },
     consumer: {

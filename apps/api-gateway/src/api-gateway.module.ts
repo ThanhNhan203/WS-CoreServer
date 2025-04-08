@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
 import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
+import { configuration } from '@app/common';
 import { validationSchema } from './config/validation.schema';
 import { ClientsModule } from '@nestjs/microservices';
-import { getKafkaConfig } from '@libs/common';
+import { getKafkaConfig } from '@app/common';
 
 @Module({
    imports: [
