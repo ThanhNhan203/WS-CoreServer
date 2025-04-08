@@ -8,18 +8,20 @@ The **WS-CoreServer** project is a modern API Server built with NestJS using a m
 
 ```
 WS-CoreServer/
-◉ apps/                # Contains the main application code for microservices
-» ◉ api-gateway/       # API Gateway microservice
-» ◉ auth-service/      # Authentication microservice
-◉ .gitignore           # Files and folders to ignore in Git
-◉ .prettierrc          # Prettier configuration for code formatting
-◉ eslint.config.mjs    # ESLint configuration for linting
-◉ nest-cli.json        # NestJS CLI configuration file
-◉ package.json         # Project dependencies and scripts
-◉ pnpm-lock.yaml       # Lock file for pnpm package manager
-◉ README.md            # Project documentation and setup guide
-◉ tsconfig.build.json  # TypeScript configuration for building the project
-◉ tsconfig.json        # TypeScript configuration file
+◉ apps/                    # Contains the main application code for microservices
+» ◉ api-gateway/           # API Gateway microservice
+» ◉ auth-service/          # Authentication microservice
+» ◉ task-manager-service/  # Task Manager microservice
+» ◉ worspace-service/      # Workspace microservice
+◉ .gitignore               # Files and folders to ignore in Git
+◉ .prettierrc              # Prettier configuration for code formatting
+◉ eslint.config.mjs        # ESLint configuration for linting
+◉ nest-cli.json            # NestJS CLI configuration file
+◉ package.json             # Project dependencies and scripts
+◉ pnpm-lock.yaml           # Lock file for pnpm package manager
+◉ README.md                # Project documentation and setup guide
+◉ tsconfig.build.json      # TypeScript configuration for building the project
+◉ tsconfig.json            # TypeScript configuration file
 ```
 ### INSTALL DEPENDENCIES
 
