@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TaskManagerServiceController } from './task-manager-service.controller';
 import { TaskManagerServiceService } from './task-manager-service.service';
 import { configuration, validationSchema } from '@app/common';
 import { ClientsModule } from '@nestjs/microservices';
 import { getKafkaConfig } from '@app/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
    imports: [
@@ -19,6 +20,13 @@ import { getKafkaConfig } from '@app/common';
          validationOptions: {
             abortEarly: false,
          },
+      }),
+      MongooseModule.forRootAsync({
+         imports: [ConfigModule],
+         useFactory: async (configService: ConfigService) => ({
+            uri: configService.get<string>('database.uri'),
+         }),
+         inject: [ConfigService],
       }),
       ClientsModule.registerAsync([
          {

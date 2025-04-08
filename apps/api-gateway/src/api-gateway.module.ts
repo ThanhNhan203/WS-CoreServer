@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from '@app/common';
 import { validationSchema } from './config/validation.schema';
 import { ClientsModule } from '@nestjs/microservices';
 import { getKafkaConfig } from '@app/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
    imports: [
@@ -20,6 +21,13 @@ import { getKafkaConfig } from '@app/common';
          validationOptions: {
             abortEarly: false,
          },
+      }),
+      MongooseModule.forRootAsync({
+         imports: [ConfigModule],
+         useFactory: async (configService: ConfigService) => ({
+            uri: configService.get<string>('database.uri'),
+         }),
+         inject: [ConfigService],
       }),
       ClientsModule.registerAsync([
          {
