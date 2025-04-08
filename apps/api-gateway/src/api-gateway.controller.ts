@@ -10,17 +10,17 @@ export class ApiGatewayController {
       return this.apiGatewayService.getHello();
    }
 
-   @Get('health/auth')
+   @Get('health/auth-service')
    checkAuthHealth() {
       return this.apiGatewayService.send('auth.health', {});
    }
 
-   @Get('health/task-manager')
+   @Get('health/task-manager-service')
    checkTaskManagerHealth() {
       return this.apiGatewayService.send('task-manager.health', {});
    }
 
-   @Get('health/workspace')
+   @Get('health/workspace-service')
    checkWorkspaceHealth() {
       return this.apiGatewayService.send('workspace.health', {});
    }
