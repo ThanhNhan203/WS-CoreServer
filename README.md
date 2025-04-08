@@ -36,6 +36,9 @@ pnpm run start
 # watch mode
 pnpm run start:dev
 
+# watch mode concurrently
+pnpm run ws-server
+
 # production mode
 pnpm run start:prod
 ```
