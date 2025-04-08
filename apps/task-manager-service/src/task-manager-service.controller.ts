@@ -1,11 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { TaskManagerServiceService } from './task-manager-service.service';
 
 @Controller()
 export class TaskManagerServiceController {
   constructor(private readonly taskManagerServiceService: TaskManagerServiceService) {}
 
-  @Get()
+  @MessagePattern('task-manager.health')
   getHello(): string {
     return this.taskManagerServiceService.getHello();
   }

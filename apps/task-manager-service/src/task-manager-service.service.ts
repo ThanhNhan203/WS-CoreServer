@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class TaskManagerServiceService {
   getHello(): string {
-    return 'Hello World!';
+    return '🚀 Task Manager Service is running 🚀';
   }
 }

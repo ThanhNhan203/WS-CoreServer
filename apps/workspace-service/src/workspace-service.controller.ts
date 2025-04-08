@@ -1,11 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { WorkspaceServiceService } from './workspace-service.service';
 
 @Controller()
 export class WorkspaceServiceController {
   constructor(private readonly workspaceServiceService: WorkspaceServiceService) {}
 
-  @Get()
+  @MessagePattern('workspace.health')
   getHello(): string {
     return this.workspaceServiceService.getHello();
   }

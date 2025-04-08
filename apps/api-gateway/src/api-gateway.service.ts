@@ -9,6 +9,8 @@ export class ApiGatewayService implements OnModuleInit {
 
    async onModuleInit() {
       this.authClient.subscribeToResponseOf('auth.health');
+      this.authClient.subscribeToResponseOf('task-manager.health');
+      this.authClient.subscribeToResponseOf('workspace.health');
       await this.authClient.connect();
    }
 
