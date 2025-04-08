@@ -9,4 +9,10 @@ export class ApiGatewayController {
    getHello(): string {
       return this.apiGatewayService.getHello();
    }
+
+   @Get('auth/health')
+   checkAuthHealth() {
+      return this.apiGatewayService.send('auth.health', {});
+   }
+   
 }

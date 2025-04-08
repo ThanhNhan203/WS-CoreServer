@@ -29,6 +29,12 @@ WS-CoreServer/
 pnpm install
 ```
 
+### RUN KAFKA SERVER
+
+```sh
+docker-compose up -d
+```
+
 ### RUN PROJECT
 
 ```sh
