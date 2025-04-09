@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../user/user.schema';
+import { User, UserDocument } from '../user/schemas/user.schema';
 import { Model } from 'mongoose';
 import { RpcException } from '@nestjs/microservices';
 import * as bcrypt from 'bcrypt';
