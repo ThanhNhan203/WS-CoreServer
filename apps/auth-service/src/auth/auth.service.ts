@@ -4,14 +4,19 @@ import { User, UserDocument } from '../user/user.schema';
 import { Model } from 'mongoose';
 import { RpcException } from '@nestjs/microservices';
 import * as bcrypt from 'bcrypt';
-import { registerDTO } from '@app/dto';
+import { LoginDTO, LoginResponseDTO, registerDTO } from '@app/dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+
 @Injectable()
 export class AuthService {
    constructor(
       @InjectModel(User.name) private userModel: Model<UserDocument>,
+      private readonly jwtservice: JwtService,
+      private readonly configService: ConfigService,
    ) {}
 
-   async register(registerDTO: registerDTO): Promise<any> {
+   async Register(registerDTO: registerDTO): Promise<any> {
       const user = await this.userModel.findOne({
          $or: [
             { username: registerDTO.username },
@@ -55,5 +60,49 @@ export class AuthService {
             },
          };
       }
+   }
+
+   GenerateAccessToken(user: User) {
+      const payload = {
+         username: user.username,
+         sub: user._id,
+         email: user.email,
+      };
+      return this.jwtservice.sign(payload, {
+         secret: this.configService.get<string>('auth.accessTokenSecret'),
+         expiresIn: this.configService.get<string>('auth.accessTokenExpiresIn'),
+      });
+   }
+
+   GenerateRefreshToken(user: User) {
+      const payload = {
+         username: user.username,
+         sub: user._id,
+         email: user.email,
+      };
+      return this.jwtservice.sign(payload, {
+         secret: this.configService.get<string>('auth.refreshTokenSecret'),
+         expiresIn: this.configService.get<string>('auth.refreshTokenExpiresIn'),
+      });
+   }
+
+   async Login(login: LoginDTO): Promise<LoginResponseDTO> {
+      const user = await this.userModel.findOne({ username: login.username });
+      if (user && (await bcrypt.compare(login.password, user.password))) {
+         const AccessToken = this.GenerateAccessToken(user);
+         const RefreshToken = this.GenerateRefreshToken(user);
+
+         return {
+            message: 'Login successfully',
+            data: {
+               access_token: AccessToken,
+               refresh_token: RefreshToken,
+            },
+         };
+      }
+      throw new RpcException({
+         message: 'Invalid credentials please try again',
+         statusCode: HttpStatus.BAD_REQUEST,
+      });
    }
 }
