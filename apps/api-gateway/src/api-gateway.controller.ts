@@ -1,9 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiGatewayService } from './api-gateway.service';
+import { MessagingService } from '@app/common';
 
 @Controller()
 export class ApiGatewayController {
-   constructor(private readonly apiGatewayService: ApiGatewayService) {}
+   constructor(
+      private readonly apiGatewayService: ApiGatewayService,
+      private readonly messagingService: MessagingService,
+   ) {}
 
    @Get()
    getHello(): string {
@@ -12,16 +16,16 @@ export class ApiGatewayController {
 
    @Get('health/auth-service')
    checkAuthHealth() {
-      return this.apiGatewayService.send('auth.health', {});
+      return this.messagingService.send('auth.health', {});
    }
 
    @Get('health/task-manager-service')
    checkTaskManagerHealth() {
-      return this.apiGatewayService.send('task-manager.health', {});
+      return this.messagingService.send('task-manager.health', {});
    }
 
    @Get('health/workspace-service')
    checkWorkspaceHealth() {
-      return this.apiGatewayService.send('workspace.health', {});
+      return this.messagingService.send('workspace.health', {});
    }
 }

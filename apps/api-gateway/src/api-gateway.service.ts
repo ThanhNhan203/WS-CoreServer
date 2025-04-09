@@ -1,25 +1,21 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { MessagingService } from '@app/common';
 
 @Injectable()
 export class ApiGatewayService implements OnModuleInit {
    constructor(
-      @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+      private readonly messagingService: MessagingService,
    ) {}
 
    async onModuleInit() {
-      this.authClient.subscribeToResponseOf('auth.health');
-      this.authClient.subscribeToResponseOf('task-manager.health');
-      this.authClient.subscribeToResponseOf('workspace.health');
-      await this.authClient.connect();
+      this.messagingService.subscribeToResponseOf('auth.health');
+      this.messagingService.subscribeToResponseOf('task-manager.health');
+      this.messagingService.subscribeToResponseOf('workspace.health');
+      await this.messagingService.connect();
    }
 
    getHello(): string {
       return '🚀 API-Gateway is running 🚀';
-   }
-
-   send(pattern: string, data: any) {
-      return this.authClient.send(pattern, data);
    }
 
 }

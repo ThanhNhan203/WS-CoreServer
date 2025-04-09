@@ -7,3 +7,7 @@ export * from './config/validation.schema';
 export { default as configuration } from './config/configuration';
 export * from './config/jwt.validation.schema';
 export * from './config/github.validation.schema';
+
+export * from './messaging/messaging.module';
+export * from './messaging/messaging.service';
+export * from './messaging/messaging.interface';

@@ -6,6 +6,12 @@ export const getKafkaConfig = (groupId: string): KafkaOptions => ({
     client: {
       clientId: 'ws-core-server',
       brokers: ['localhost:9092'],
+      retry: {
+        initialRetryTime: 1000,
+        maxRetryTime: 30000,
+        retries: 5,
+        factor: 2,
+      },
     },
     consumer: {
       groupId,

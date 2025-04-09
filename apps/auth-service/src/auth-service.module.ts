@@ -7,6 +7,8 @@ import { validationSchema } from './config/validation.schema';
 import { ClientsModule } from '@nestjs/microservices';
 import { getKafkaConfig } from '@app/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
    imports: [
@@ -35,6 +37,8 @@ import { MongooseModule } from '@nestjs/mongoose';
             useFactory: () => getKafkaConfig('auth-service-server'),
          },
       ]),
+      UserModule,
+      AuthModule,
    ],
    controllers: [AuthServiceController],
    providers: [AuthServiceService],

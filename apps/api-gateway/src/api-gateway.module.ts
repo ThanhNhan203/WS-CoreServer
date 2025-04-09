@@ -4,9 +4,9 @@ import { ApiGatewayService } from './api-gateway.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from '@app/common';
 import { validationSchema } from './config/validation.schema';
-import { ClientsModule } from '@nestjs/microservices';
-import { getKafkaConfig } from '@app/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MessagingModule } from '@app/common';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
    imports: [
@@ -29,12 +29,8 @@ import { MongooseModule } from '@nestjs/mongoose';
          }),
          inject: [ConfigService],
       }),
-      ClientsModule.registerAsync([
-         {
-            name: 'AUTH_SERVICE',
-            useFactory: () => getKafkaConfig('api-gateway-client'),
-         },
-      ]),
+      MessagingModule,
+      AuthModule,
    ],
    controllers: [ApiGatewayController],
    providers: [ApiGatewayService],
